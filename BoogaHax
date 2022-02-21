@@ -1,0 +1,323 @@
+local library = loadstring(game:GetObjects("rbxassetid://7657867786")[1].Source)()
+local RunService = game:GetService("RunService")
+local dwEntities = game:GetService("Players")
+local dwLocalPlayer = dwEntities.LocalPlayer 
+local Wait = library.subs.Wait
+
+--------------------------------------------------
+
+BoogaHax = {
+    Items = {
+        Pickup_Aura = false, 
+        Pickup_Delay = 0.5,
+        Item_Whitelist = {},
+        Only_Pick_Up_Certain_Items = false,
+
+        On_Debounce = false,
+
+        Item_ESP = false,
+        Item_Tracers = false
+    },
+
+    Farming = {
+        Farm_Aura = false,
+        Plant_To_Farm = ""
+    },
+
+    Combat = {
+        Auto_Hunger = false,
+        Auto_Health = false,
+        Auto_Hunger_Food = "",
+        Auto_Health_Food = "",
+
+        No_Bow_Cooldown = false,
+        Bow_Aimbot = false
+    },
+
+    Local = {
+        Player_ESP = false,
+        Player_Tracers = false,
+        Nametags = false,
+        Chams = false,
+        TeamCheck = true
+    },
+
+    Bypass = {
+        DescentFly = false
+    },
+
+    Misc = {
+        AutoGem = false,
+    },
+
+    ColorData = {
+        Chams_Color = Color3.fromRGB(0,0,255),
+        Chams_Transparency = 0.1,
+        Chams_Glow_Color = Color3.fromRGB(255,0,0)
+    }
+}
+
+local settings_table = {
+	Enabled = true,
+	outlinecolor = Color3.fromRGB(255, 255, 255),
+	chamscolor = Color3.fromRGB(207, 66, 0),
+	textcolor = Color3.fromRGB(184, 108, 190),
+	teamcolor = true,
+	names = true
+}
+
+--------------------------------------------------
+
+function toggle(v)
+    if v == true then v = false else v = true end
+end
+
+--------------------------------------------------
+
+local PepsisWorld = library:CreateWindow({
+    Name = "Booga Hax",
+    Themeable = {
+        Info = "",
+        Background = {
+            Transparency = 100
+        }
+    }
+})
+
+--------------------------------------------------
+
+local GeneralTab = PepsisWorld:CreateTab({
+    Name = "General"
+})
+
+local ItemSection = GeneralTab:CreateSection({
+    Name = "Items"
+})
+
+local FarmingSection = GeneralTab:CreateSection({
+    Name = "Farming"
+})
+
+local CombatSection = GeneralTab:CreateSection({
+    Name = "Combat"
+})
+
+local BypassSection = GeneralTab:CreateSection({
+    Name = "Bypasses",
+    Side = "Right"
+})
+
+
+local MiscSection = GeneralTab:CreateSection({
+    Name = "Misc",
+    Side = "Right"
+})
+--------------------------------------------------
+
+ItemSection:AddToggle({
+    Name = "Pickup Aura",
+    Callback = function(v)
+        if BoogaHax.Items.Pickup_Aura == false then BoogaHax.Items.Pickup_Aura = true else BoogaHax.Items.Pickup_Aura = false end
+    end
+})
+
+ItemSection:AddTextbox({
+    Name = "Items To Pickup",
+    Callback = function(v)
+        table.insert(BoogaHax.Items.Item_Whitelist, v)
+        print(v)
+    end
+})
+
+ItemSection:AddButton({
+    Name = "Clear",
+    Callback = function()
+        BoogaHax.Items.Item_Whitelist = {}
+    end
+})
+
+ItemSection:AddToggle({
+    Name = "Item ESP",
+    Callback = function(bool)
+        toggle(BoogaHax.Items.Item_ESP)
+    end
+})
+
+ItemSection:AddToggle({
+    Name = "Item Tracers",
+    Callback = function(bool)
+        toggle(BoogaHax.Items.Item_Tracers)
+    end
+})
+
+--------------------------------------------------
+
+FarmingSection:AddToggle({
+    Name = "Farm Aura",
+    Callback = function(bool)
+        toggle(BoogaHax.Farming.Farm_Aura)
+    end
+})
+
+FarmingSection:AddDropdown({
+    Name = "Plant To Farm",
+    List = {"Sunfruit", "Bloodfruit", "Bluefruit", "Cloud Berry", "Orange", "Apple", "Berry", "Oddberry", "Strawberry", "Lemmon"},
+    Callback = function(v)
+        BoogaHax.Farming.Plant_To_Farm = v
+    end
+})
+
+--------------------------------------------------
+
+CombatSection:AddToggle({
+    Name = "Auto Health",
+    Callback = function(bool)
+        toggle(BoogaHax.Combat.Auto_Health)
+    end
+})
+
+CombatSection:AddToggle({
+    Name = "Auto Hunger",
+    Callback = function(bool)
+        toggle(BoogaHax.Combat.Auto_Hunger)
+    end
+})
+
+CombatSection:AddDropdown({
+    Name = "Auto Health Food",
+    List = {"Bread", "Cactus Bits", "Coconut", "Cooked Egg", "Cooked Fish", "Cooked Morsel", "Sunfruit", "Bloodfruit", "Bluefruit", "Cloud Berry", "Orange", "Apple", "Berry", "Oddberry", "Strawberry", "Lemmon"},
+    Callback = function(bool)
+        toggle(BoogaHax.Farming.Farm_Aura)
+    end
+})
+
+CombatSection:AddDropdown({
+    Name = "Auto Hunger Food",
+    List = {"Bread", "Cactus Bits", "Coconut", "Cooked Egg", "Cooked Fish", "Cooked Morsel", "Sunfruit", "Bloodfruit", "Bluefruit", "Cloud Berry", "Orange", "Apple", "Berry", "Oddberry", "Strawberry", "Lemmon"},
+    Callback = function(bool)
+        toggle(BoogaHax.Farming.Farm_Aura)
+    end
+})
+
+CombatSection:AddToggle({
+    Name = "No Bow Cooldown",
+    Callback = function(bool)
+        toggle(BoogaHax.Combat.No_Bow_Cooldown)
+    end
+})
+
+CombatSection:AddToggle({
+    Name = "Bow Aimbot",
+    Callback = function(bool)
+        toggle(BoogaHax.Combat.Bow_Aimbot)
+    end
+})
+
+--------------------------------------------------
+
+--[[BypassSection:AddLabel({
+    Name = "DONT USE IN WATER!!"
+})
+
+BypassSection:AddToggle({
+    Name = "Descent Fly",
+    Callback = function(v)
+        BoogaHax.Bypass.DescentFly = v
+    end
+})
+
+^^ FLAGS
+
+]]
+
+BypassSection:AddSlider({
+    Name = "Jump Height",
+    Flag = "High_Jump_Height",
+    Value = 50,
+    Min = 50,
+    Max = 1000,
+    Textbox = true,
+    Callback = function(v)
+        game.Workspace[game.Players.LocalPlayer.Name].Humanoid.JumpPower = v
+    end
+})
+
+BypassSection:AddButton({
+    Name = "Reset High Jump",
+    Callback = function()
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
+    end
+})
+
+--------------------------------------------------
+
+MiscSection:AddToggle({
+    Name = "No Fog",
+    Callback = function(bool)
+        if game.Lighting:FindFirstChild("Atmosphere") then game.Lighting:FindFirstChild("Atmosphere").Parent = game.ReplicatedStorage else game.ReplicatedStorage.Atmosphere.Parent = game.Lighting end
+    end
+})
+
+MiscSection:AddToggle({
+    Name = "Auto Collect Gems",
+    Callback = function(v)
+        if BoogaHax.Misc.AutoGem == true then BoogaHax.Misc.AutoGem = false else BoogaHax.Misc.AutoGem = true end
+    end
+})
+
+--------------------------------------------------
+
+game.Workspace.Items.ChildAdded:Connect(function(c)
+    if BoogaHax.Items.Pickup_Aura then
+        for _,v in pairs(BoogaHax.Items.Item_Whitelist) do
+            if string.lower(v) == string.lower(c.Name) then
+                game.ReplicatedStorage.Relay.Pickup:FireServer(c)
+            end
+        end
+    end
+end)
+
+while wait(30) do
+    if BoogaHax.Misc.AutoGem == true then
+        game.ReplicatedStorage.Relay.Currency.ClaimFreeGems:InvokeServer()
+    end
+end
+
+--[[plr = game:GetService('Players').LocalPlayer
+down = true
+
+function onButton1Down(mouse)
+    if BoogaHax.Bypass.DescentFly == true then
+        down = true
+        while down do
+            if not down then break end
+            local char = plr.Character
+            char.HumanoidRootPart.Velocity = char.HumanoidRootPart.CFrame.lookVector * 30
+            wait()
+        end
+    end
+end
+    
+function onButton1Up(mouse)
+    down = false
+end
+    
+function onSelected(mouse)
+    mouse.KeyDown:connect(function(q) if q:lower()=="q" then onButton1Down(mouse)end end)
+    mouse.KeyUp:connect(function(q) if q:lower()=="q"then onButton1Up(mouse)end end)
+end
+    
+onSelected(game.Players.LocalPlayer:GetMouse())
+
+--------------------------------------------------
+
+-- Script generated by SimpleSpy - credits to exx#9394
+
+local args = {
+    [1] = 32, -- structure id
+    [2] = 3, -- plant id
+    [3] = "Plant Box"
+}
+
+game:GetService("ReplicatedStorage").Relay.Structures.InputStructure:FireServer(unpack(args))
+]]
