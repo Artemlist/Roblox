@@ -7,6 +7,7 @@ local Wait = library.subs.Wait
 --------------------------------------------------
 
 BoogaHax = {
+    Version = "1.1"
     Items = {
         Pickup_Aura = false, 
         Pickup_Delay = 0.5,
