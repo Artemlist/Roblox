@@ -27,8 +27,6 @@ BoogaHax = {
     Combat = {
         Auto_Hunger = false,
         Auto_Health = false,
-        Auto_Hunger_Food = "",
-        Auto_Health_Food = "",
 
         No_Bow_Cooldown = false,
         Bow_Aimbot = false
@@ -172,7 +170,7 @@ FarmingSection:AddDropdown({
 CombatSection:AddToggle({
     Name = "Auto Health",
     Callback = function(bool)
-        toggle(BoogaHax.Combat.Auto_Health)
+        if BoogaHax.Combat.Auto_Health == false then BoogaHax.Combat.Auto_Health = true else BoogaHax.Combat.Auto_Health = false end
     end
 })
 
@@ -180,22 +178,6 @@ CombatSection:AddToggle({
     Name = "Auto Hunger",
     Callback = function(bool)
         toggle(BoogaHax.Combat.Auto_Hunger)
-    end
-})
-
-CombatSection:AddDropdown({
-    Name = "Auto Health Food",
-    List = {"Bread", "Cactus Bits", "Coconut", "Cooked Egg", "Cooked Fish", "Cooked Morsel", "Sunfruit", "Bloodfruit", "Bluefruit", "Cloud Berry", "Orange", "Apple", "Berry", "Oddberry", "Strawberry", "Lemmon"},
-    Callback = function(bool)
-        toggle(BoogaHax.Farming.Farm_Aura)
-    end
-})
-
-CombatSection:AddDropdown({
-    Name = "Auto Hunger Food",
-    List = {"Bread", "Cactus Bits", "Coconut", "Cooked Egg", "Cooked Fish", "Cooked Morsel", "Sunfruit", "Bloodfruit", "Bluefruit", "Cloud Berry", "Orange", "Apple", "Berry", "Oddberry", "Strawberry", "Lemmon"},
-    Callback = function(bool)
-        toggle(BoogaHax.Farming.Farm_Aura)
     end
 })
 
@@ -268,10 +250,29 @@ MiscSection:AddToggle({
 --------------------------------------------------
 
 game.Workspace.Items.ChildAdded:Connect(function(c)
-    if BoogaHax.Items.Pickup_Aura then
+    if BoogaHax.Items.Pickup_Aura == true then
         for _,v in pairs(BoogaHax.Items.Item_Whitelist) do
             if string.lower(v) == string.lower(c.Name) then
                 game.ReplicatedStorage.Relay.Pickup:FireServer(c)
+            end
+        end
+    end
+end)
+
+game.Players.LocalPlayer.PlayerGui.GUI_Main.Panes.Subordinate.Topbar.Bars.Food.Frame.TextLabel.Changed:Connect(function()
+    local ate = false
+    if BoogaHax.Combat.Auto_Health == true then
+        local foodLabel = game.Players.LocalPlayer.PlayerGui.GUI_Main.Panes.Subordinate.Topbar.Bars.Food.Frame.TextLabel
+        print(foodLabel.Text)
+        if tonumber(foodLabel.Text) <= 50 then
+            if not ate then
+                for i=1, 5 do
+                    local args = {
+                        [1] = 7
+                    }
+
+                    game:GetService("ReplicatedStorage").Relay.Inventory.EatInventoryItem:FireServer(unpack(args))
+                end
             end
         end
     end
